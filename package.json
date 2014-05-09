@@ -1,0 +1,30 @@
+{
+  "name": "node-styleguides",
+  "version": "0.0.0",
+  "description": "A generator to create styleguides from any file types",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:dancoates/styleguide-generator.git"
+  },
+  "keywords": [
+    "styleguide",
+    "generator",
+    "sass",
+    "less",
+    "css",
+    "javascript",
+    "js"
+  ],
+  "author": "Dan Coates",
+  "license": "MIT",
+  "dependencies": {
+    "underscore": "~1.6.0",
+    "glob": "~3.2.9",
+    "yamljs": "~0.1.5",
+    "markdown": "~0.5.0"
+  }
+}

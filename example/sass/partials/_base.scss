@@ -1,0 +1,50 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/*styleguide
+
+title: Styleguide item
+description: This is a styleguide item.
+category: woot
+
+
+---
+
+Code:
+
+<div class="woot">Markup</div>
+
+
+*/
+
+
+button {
+    -webkit-appearance: none;
+}
+
+
+
+/*styleguide
+
+title: Styleguide item 2
+description: This is a styleguide item.
+category: woot
+scripts:
+    - sass/woot/somthing.js
+    - ca/readsf/fasd.js
+
+
+-----------
+
+Code:
+
+<div class="woot">Markup</div>
+
+---
+
+Woot
+
+*/
