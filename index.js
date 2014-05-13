@@ -4,8 +4,10 @@ var nsg = function(options) {
         fs      : require('fs'),
         glob    : require('glob'),
         yaml    : require('yamljs'),
-        md      : require('markdown').markdown,
-        hb      : require('handlebars')
+        md      : require('marked'),
+        hb      : require('handlebars'),
+        mkdirp  : require('mkdirp'),
+        hljs    : require('highlight.js')
     };
     
     var defaults = {
@@ -67,7 +69,7 @@ Nsg.prototype.parseFileData = function(data, callback) {
 
         return {
             conf : _this.util.yaml.parse(subBlocks[0]),
-            body : _this.util.md.toHTML(subBlocks.slice(1).join('---'))
+            body : _this.util.md(subBlocks.slice(1).join('---'))
         };
 
     });
@@ -78,6 +80,7 @@ Nsg.prototype.parseFileData = function(data, callback) {
 
 Nsg.prototype.generateFiles = function(blocks) {
     var _this = this;
+    var fs = _this.util.fs;
     var organizedBlocks = blocks.reduce(function(obj, block) {
         var cat = block.conf.category;
         var parent = _this.helpers.traverseObj(obj, cat);
@@ -85,32 +88,119 @@ Nsg.prototype.generateFiles = function(blocks) {
         return obj;
     }, {});
 
-    // Find assets
-    this.findAssets(this.settings, function(){
-        console.log(_this.settings);
+
+    var singleTemplatePath = _this.settings.template + "single/single.html";
+    var indexTemplatePathMain = _this.settings.template + "index/main.html";
+    var indexTemplatePathItem = _this.settings.template + "index/item.html";
+    var indexTemplatePathNav = _this.settings.template + "index/nav.html";
+
+    // Create single templates
+    var opts = {encoding: "UTF8"};
+    fs.readFile(singleTemplatePath, opts, function(err, data){
+        var template = _this.util.hb.compile(data);
+        _this.generatePartials(organizedBlocks, template);
+
     });
 
+    // Scope mainTemplate
+    var mainTemplate;
+    // Callback to generate index once templates are read
+    var callback = _this.util._.after(3, function() {
+        _this.generateIndex(organizedBlocks, mainTemplate);
+    });
 
-    var singleTemplatePath = _this.settings.template + "single";
-    var fullTemplatePath = _this.settings.template + "compiled";
-    //_this.util.fs.readFile();
+    // Register helpers
+    _this.util.hb.registerHelper('filePath', function(cat, title){
+        return _this.settings.webDir + (cat.split('=>').map(function(part){
+            return _this.helpers.getSlug(part.trim());
+        }).join('/')) + "/" +  _this.helpers.getSlug(title) + ".html";
+    });
 
+    _this.util.hb.registerHelper('highlight', function(html){
+        var highlighted = _this.util.hljs.highlight('html', html);
+        return "<pre class='sg-highlighted'><code>" + highlighted.value + "</code></pre>";
+    });
 
+    _this.util.hb.registerHelper('getId', function(cat, title){
+        var catSlug = _this.helpers.getSlug(cat);
+        var titleSlug = _this.util._.isString(title) ? "-" + _this.helpers.getSlug(title) : "";
+        return catSlug + titleSlug;
+    });
+
+    _this.util.hb.registerHelper('setContext', function(context, key){
+        this.context = _this.helpers.getSlug(context + "-" + key);
+    });
+
+    _this.util.hb.registerHelper('sgLog', function(log){
+        console.log("handlebars log: " + log);
+    });
+
+    // Read Main Template
+    fs.readFile(indexTemplatePathMain, opts, function(err, data){
+        mainTemplate = _this.util.hb.compile(data);
+        callback();
+    });
+
+    // Read recursive category template
+    fs.readFile(indexTemplatePathItem, opts, function(err, data){
+        _this.util.hb.registerHelper('recursiveCategory', function(subCat, context){
+            var itemTemplate = _this.util.hb.compile(data);
+            return itemTemplate({categories: subCat, context : context});
+        });
+        callback();
+    });
+
+    // Read recursive navigation template
+    fs.readFile(indexTemplatePathNav, opts, function(err, data){
+        _this.util.hb.registerHelper('recursiveNav', function(subCat, context){
+            var itemTemplate = _this.util.hb.compile(data);
+            return itemTemplate({categories: subCat, context : context});
+        });
+        callback();
+    });
+
+    
 
 };
 
-Nsg.prototype.findAssets = function() {
+Nsg.prototype.generateIndex = function(blocks, template) {
     var _this = this;
-    var numargs = arguments.length -1;
-    var cb = _this.util._.after(numargs, arguments[numargs]);
-    arguments[0] = [];
-    _this.util._.each(arguments, function(item, index){
-        // if(index === numargs) return;
-        // _this.helpers.globFiles(item, function(files){
-        //     item = files;
-        //     cb();
-        // });
-        cb();
+    _this.util.mkdirp(_this.settings.output, function(){
+        var data = template({categories : blocks});
+        var fileName = _this.settings.output + "index.html";
+        _this.util.fs.writeFile(fileName, data, function(err){
+            console.log(_this.settings.output + 'index.html Created');
+        });
+    });
+};
+
+Nsg.prototype.generatePartials = function(blocks, template, currentPath) {
+    var _this = this;
+    var fs = _this.util.fs;
+    var output = _this.settings.output;
+    var startPath = currentPath ? currentPath + "/" : "";
+
+    _this.util._.each(blocks, function(obj, cat) {
+        var folderName = _this.helpers.getSlug(cat);
+        var folderPath = output + startPath + folderName;
+        
+        _this.util.mkdirp(folderPath, function(err){
+            if(obj.items) {
+                obj.items.forEach(function(item){
+                    var data = template(item);
+                    var title = item.conf.title;
+                    var fileName = folderPath + '/' +  _this.helpers.getSlug(title) + ".html";
+                    fs.writeFile(fileName, data, function(err){
+                        console.log(fileName + ' Created');
+                    });
+                });
+            }
+        });
+
+        if(obj.subcat) {
+            var newPath = startPath + folderName;
+            _this.generatePartials(obj.subcat, template, newPath);
+        }
     });
 };
 
@@ -149,7 +239,10 @@ Nsg.prototype.getHelpers = function() {
             };
         },
         getSlug : function(name) {
-            return name.replace(/[a-zA-Z0-9\-\_]/g, "").toLowerCase();
+            return name
+                .replace(' ', '-')
+                .replace(/[^a-zA-Z0-9\-\_]/g, "")
+                .toLowerCase();
         },
         traverseObj : function(obj, pattern) {
             var arr = pattern.split('=>').map(function(s){
@@ -159,7 +252,6 @@ Nsg.prototype.getHelpers = function() {
             arr.forEach(function(cat, index){
                 current[cat] = current[cat] || {};
                 current[cat].items = current[cat].items || [];
-                // not last
                 if(index !== arr.length -1) {
                     current[cat].subcat = current[cat].subcat || {};
                     current = current[cat].subcat;

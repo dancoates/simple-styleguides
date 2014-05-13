@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <link rel="stylesheet" href="../css/style.css">
+    
+</head>
+<body>
+    <aside class="sg-aside">
+        <h2 class="sg-index-heading">Index</h2>
+        <nav class="sg-index">
+            {{&recursiveNav categories ""}}
+        </nav>
+    </aside>
+    <div class="sg-container">
+        <h2 class="sg-page-heading">Styleguide</h2>
+        <div class="sg-container--content">
+            {{&recursiveCategory categories ""}}
+        </div>
+    </div>
+    <script src="../js/jquery.js"></script>
+    <script>
+        $("[data-frame]").resizable({
+            alsoResize : 'iframe'
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<div class="sg-category">
+    {{#each categories}}
+        {{setContext ../context @key}}
+        <h2 id="{{getId context}}">{{@key}}</h2>
+        {{#if items}}
+            {{#each items}}
+                <div class="sg-item">
+                    <h3 id="{{getId ../../context conf.title}}">{{ conf.title}}</h3>
+                    <div class="sg-item--content">
+                        {{{ highlight body }}}
+                        <a href="/{{filePath conf.category conf.title}}" target="_blank" class="sg-example-view">Open in new window</a>
+                        <div class="sg-example">
+                            <div class="iframe-container">
+                                <iframe src="/{{filePath conf.category conf.title}}"></iframe>
+                            </div>
+                            <textarea></textarea>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        {{/if}}
+        {{#if subcat}} 
+            {{&recursiveCategory subcat ../context}}
+        {{/if}}
+    {{/each}}
+</div>
+
+

@@ -1,0 +1,169 @@
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.sg-aside {
+    position: fixed;
+    width: 250px;
+    left: 0;
+    top: 0;
+    height: 100%;
+    color: #ccc;
+    background: #2d2d2d;
+    padding: 1em;
+    border-right: 1px solid #ccc;
+    overflow: auto;
+}
+
+.sg-container {
+    position: absolute;
+    left: 250px;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+
+    .sg-container--content {
+        padding: 1em 2em;
+    }
+
+.sg-page-heading {
+    background: #eee;
+    margin: 0;
+    padding: 1rem 2rem;
+}
+
+.sg-index-heading {
+    margin: 0;
+}
+
+.sg-index {
+    font-size: 0.8em;
+}       
+    
+    .sg-index ul {
+        padding-left: 0.5em;
+    }
+
+    .sg-index>ul ul {
+        margin: 0 0 1em 0;
+    }
+
+    .sg-index--catlist {
+        border-left: 2px solid #99cc99;
+    }
+
+    .sg-index li {
+        list-style-type: none;
+    }
+
+        .sg-index li:before {
+            content: "-";
+        }
+
+    .sg-index a {
+        text-decoration: none;
+        color: #ccc;
+    }
+
+    .sg-index a:hover{
+        color: #f2777a;
+    }
+
+    .sg-index--cat {
+        font-weight: bold;
+        text-decoration: underline;
+        display: block;
+        margin-bottom: 0.2em;
+    }
+
+
+.sg-highlighted {
+    font-size: 0.875em;
+    max-height: 300px;
+    overflow: auto;
+    border: 3px solid #eee;
+    margin-bottom: 0;
+}
+
+.sg-item {
+   margin: 0 0 4em 0;
+}
+
+.sg-item--content {
+    position: relative;
+}
+
+.sg-example {
+    display: block;
+    
+    border: 3px solid #eee;
+    border-top: 0;
+    margin: 0;
+    width: 100%;
+    position :relative;
+}
+
+    .sg-example .iframe-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 20px;
+        right: 0;
+    }
+
+    .sg-example iframe {
+        position: absolute;
+        background: white;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        border: none;
+        z-index: 1;
+    }
+
+    .sg-example textarea {
+        display: block;
+        position: relative;
+        z-index: 0;
+        width: 100%;
+        min-height: 250px;
+        border: none;
+        -webkit-appearance: none;
+        outline: none;
+        resize: vertical;
+    }
+
+    .sg-example textarea:focus {
+        border: none;
+        outline: none;
+    }
+
+.sg-example-view {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #eee;
+    color: #333;
+    font-size: 0.875em;
+    text-decoration: none;
+    padding: 0.5em;
+    display: block;
+}
+.sg-example-view:hover {
+    color: #f2777a;
+}
+
+.sg-category {
+    margin: 0 0 4em 0;
+}
+
+.sg-category .sg-category {
+    padding-left: 1em;
+    border-left: 3px solid #CBE3BD;
+}

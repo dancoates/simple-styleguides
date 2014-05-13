@@ -1,0 +1,19 @@
+<ul class="sg-index--catlist">
+    {{#each categories}}
+        {{setContext ../context @key}}
+        <a href="#{{getId context}}" class="sg-index--cat">{{@key}}</a>
+        {{#if items}}
+            <ul>
+                {{#each items}}
+                    <li>
+                        <a href="#{{getId ../../context conf.title}}" class="sg-index--item">{{conf.title}}</a>
+                    </li>
+                {{/each}}
+            </ul>
+        {{/if}}
+        
+        {{#if subcat}}
+            {{&recursiveNav subcat ../context}}
+        {{/if}}
+    {{/each}}
+</ul>
