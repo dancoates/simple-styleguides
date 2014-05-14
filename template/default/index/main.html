@@ -6,6 +6,14 @@
     <link rel="stylesheet" href="{{ settings.assetDir }}css/normalize.css">
     <link rel="stylesheet" href="{{ settings.assetDir }}css/highlight.css">
     <link rel="stylesheet" href="{{ settings.assetDir }}css/style.css">
+    {{#each settings.css}}
+    <link rel="stylesheet" href="{{this}}">
+    {{/each}}
+
+    {{#each settings.headScripts}}
+    <script src="{{this}}"></script>
+    {{/each}}
+
 </head>
 <body>
     <aside class="sg-aside">
@@ -20,5 +28,8 @@
             {{&recursiveCategory content.categories "sg"}}
         </div>
     </div>
+    {{#each settings.footerScripts}}
+    <script src="{{this}}"></script>
+    {{/each}}
 </body>
 </html>
