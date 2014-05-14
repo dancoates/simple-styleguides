@@ -1,4 +1,4 @@
-var nsg = function(options) {
+var nsg = function(options, callback) {
     var util = {
         _       : require("underscore"),
         fs      : require('fs'),
@@ -7,25 +7,30 @@ var nsg = function(options) {
         md      : require('marked'),
         hb      : require('handlebars'),
         mkdirp  : require('mkdirp'),
-        hljs    : require('highlight.js')
+        hljs    : require('highlight.js'),
+        ncp     : require('ncp').ncp
     };
     
     var defaults = {
         indexTemplateFolder : __dirname + "/template/default/index/",
         itemTemplate : __dirname + "/template/default/item/item.html",
+        outputDir : "styleguide/",
+        webDir : "/",
+        assetDir : 'assets/',
         encoding : "UTF8"
     };
 
     var settings = util._.extend(defaults, options);
 
-    return new Nsg(util, settings);
+    return new Nsg(util, settings, callback);
 };
 
 
-var Nsg = function(util, settings) {
+var Nsg = function(util, settings, callback) {
     this.util = util;
     this.settings = settings;
     this.helpers = this.getHelpers();
+    this.callback = callback;
     this.readFileData();
 };
 
@@ -82,6 +87,11 @@ Nsg.prototype.parseFileData = function(data, callback) {
 Nsg.prototype.generateFiles = function(blocks) {
     var _this = this;
     var fs = _this.util.fs;
+    var toProcess = blocks.length + 2; // +2 is the index creation & asset copy
+    _this.callback = _this.callback ?
+        _this.util._.after(toProcess, _this.callback) :
+        function(){};
+
     var organizedBlocks = blocks.reduce(function(obj, block) {
         var cat = block.info.category;
         var parent = _this.helpers.traverseObj(obj, cat);
@@ -123,7 +133,13 @@ Nsg.prototype.generateFiles = function(blocks) {
     fs.readFile(indexTemplatePathItem, opts, function(err, data){
         _this.util.hb.registerHelper('recursiveCategory', function(subCat, context){
             var itemTemplate = _this.util.hb.compile(data);
-            return itemTemplate({categories: subCat, context : context});
+            return itemTemplate({
+                settings : _this.settings,
+                content: {
+                    categories: subCat,
+                    context : context
+                }
+            });
         });
         callback();
     });
@@ -132,10 +148,18 @@ Nsg.prototype.generateFiles = function(blocks) {
     fs.readFile(indexTemplatePathNav, opts, function(err, data){
         _this.util.hb.registerHelper('recursiveNav', function(subCat, context){
             var itemTemplate = _this.util.hb.compile(data);
-            return itemTemplate({categories: subCat, context : context});
+            return itemTemplate({
+                settings : _this.settings,
+                content: {
+                    categories: subCat,
+                    context : context
+                }
+            });
         });
         callback();
     });
+
+    _this.copyAssets();
 };
 
 Nsg.prototype.registerHBHelpers = function() {
@@ -173,19 +197,34 @@ Nsg.prototype.registerHBHelpers = function() {
 
 Nsg.prototype.generateIndex = function(blocks, template) {
     var _this = this;
-    _this.util.mkdirp(_this.settings.output, function(){
-        var data = template({categories : blocks});
-        var fileName = _this.settings.output + "index.html";
-        _this.util.fs.writeFile(fileName, data, function(err){
-            console.log(_this.settings.output + 'index.html Created');
+    _this.util.mkdirp(_this.settings.outputDir, function(){
+        var data = template({
+            settings : _this.settings,
+            content : {
+                categories : blocks
+            }
         });
+        var fileName = _this.settings.outputDir + "index.html";
+        _this.util.fs.writeFile(fileName, data, function(err){
+            console.log(_this.settings.outputDir + 'index.html Created');
+            _this.callback();
+        });
+    });
+};
+
+Nsg.prototype.copyAssets = function() {
+    var _this = this;
+    var source = _this.settings.indexTemplateFolder + "assets/";
+    var dest = _this.settings.outputDir + _this.settings.assetDir;
+    _this.util.ncp(source, dest, function(err){
+        _this.callback();
     });
 };
 
 Nsg.prototype.generatePartials = function(blocks, template, currentPath) {
     var _this = this;
     var fs = _this.util.fs;
-    var output = _this.settings.output;
+    var output = _this.settings.outputDir;
     var startPath = currentPath ? currentPath + "/" : "";
 
     _this.util._.each(blocks, function(obj, cat) {
@@ -195,11 +234,15 @@ Nsg.prototype.generatePartials = function(blocks, template, currentPath) {
         _this.util.mkdirp(folderPath, function(err){
             if(obj.items) {
                 obj.items.forEach(function(item){
-                    var data = template(item);
+                    var data = template({
+                        settings: _this.settings,
+                        content: item
+                    });
                     var title = item.info.title;
                     var fileName = folderPath + '/' +  _this.helpers.getSlug(title) + ".html";
                     fs.writeFile(fileName, data, function(err){
                         console.log(fileName + ' Created');
+                        _this.callback();
                     });
                 });
             }

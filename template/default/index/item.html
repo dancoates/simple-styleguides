@@ -1,5 +1,5 @@
 <div class="sg-category">
-    {{#each categories}}
+    {{#each content.categories}}
         {{setContext ../context @key}}
         <h2 id="{{getId context}}">{{@key}} <a href="#{{getId context}}" class="anchor-link">#</a></h2>
         {{#if items}}
@@ -11,10 +11,10 @@
                     {{/if}}
                     <div class="sg-item--content">
                         {{{ highlight body }}}
-                        <a href="/{{filePath info.category info.title}}" target="_blank" class="sg-example-view">Open in new window</a>
+                        <a href="{{filePath info.category info.title}}" target="_blank" class="sg-example-view">Open in new window</a>
                         <div class="sg-example">
                             <div class="iframe-container">
-                                <iframe src="/{{filePath info.category info.title}}"></iframe>
+                                <iframe src="{{filePath info.category info.title}}"></iframe>
                             </div>
                             <textarea></textarea>
                         </div>

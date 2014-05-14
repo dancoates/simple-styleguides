@@ -4,7 +4,7 @@ nsg({
         "sass/partials/*.scss",
         "sass/style.scss"
     ],
-    output : "styleguide/",
-    webDir : "styleguide/"
+    outputDir : "styleguide/",
+    webDir : "/styleguide/"
 });
 

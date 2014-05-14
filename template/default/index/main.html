@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Styleguide</title>
-    <link rel="stylesheet" href="../css/normalize.css">
-    <link rel="stylesheet" href="../css/highlight.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="{{ settings.assetDir }}css/normalize.css">
+    <link rel="stylesheet" href="{{ settings.assetDir }}css/highlight.css">
+    <link rel="stylesheet" href="{{ settings.assetDir }}css/style.css">
 </head>
 <body>
     <aside class="sg-aside">
         <h2 class="sg-index-heading">Index</h2>
         <nav class="sg-index">
-            {{&recursiveNav categories "sg"}}
+            {{&recursiveNav content.categories "sg"}}
         </nav>
     </aside>
     <div class="sg-container">
         <h2 class="sg-page-heading">Styleguide</h2>
         <div class="sg-container--content">
-            {{&recursiveCategory categories "sg"}}
+            {{&recursiveCategory content.categories "sg"}}
         </div>
     </div>
 </body>

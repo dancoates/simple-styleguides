@@ -1,6 +1,6 @@
 {
   "name": "simple-styleguides",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A generator to create styleguides from any file types",
   "main": "index.js",
   "repository": {
@@ -25,6 +25,7 @@
     "handlebars": "~2.0.0-alpha.2",
     "mkdirp": "~0.5.0",
     "marked": "~0.3.2",
-    "highlight.js": "~8.0.0"
+    "highlight.js": "~8.0.0",
+    "ncp": "~0.5.1"
   }
 }
