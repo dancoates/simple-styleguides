@@ -5,6 +5,10 @@
     box-sizing: border-box;
 }
 
+html {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
 .sg-aside {
     position: fixed;
     width: 250px;
@@ -61,7 +65,7 @@
     }
 
         .sg-index li:before {
-            content: "-";
+            content: "- ";
         }
 
     .sg-index a {
@@ -86,6 +90,7 @@
     max-height: 300px;
     overflow: auto;
     border: 3px solid #eee;
+    background: #f8f8f8;
     margin-bottom: 0;
 }
 
@@ -95,6 +100,17 @@
 
 .sg-item--content {
     position: relative;
+}
+
+.anchor-link {
+    text-decoration: none;
+    color: #dedede;
+    vertical-align: super;
+    font-size: 0.7em;
+}
+
+.anchor-link:hover {
+    color: black;
 }
 
 .sg-example {

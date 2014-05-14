@@ -7,7 +7,15 @@ html, body {
 /*styleguide
 
 title: Styleguide item
-description: This is a styleguide item.
+description: |
+    #### Heading 3
+    This is a paragraph
+
+    - With a list
+    - And another list item
+
+    And another paragraph
+
 category: Buttons
 
 
@@ -33,9 +41,6 @@ button {
 title: Styleguide item 2
 description: This is a styleguide item.
 category: Buttons => Rounded Buttons
-scripts:
-    - sass/woot/somthing.js
-    - ca/readsf/fasd.js
 
 
 -----------
@@ -46,23 +51,7 @@ scripts:
 <div class="woot">Markup</div>
 <div class="woot">Markup</div>
 <div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
-<div class="woot">Markup</div>
+
 
 ---
 
@@ -75,10 +64,6 @@ Woot
 title: Styleguide item 4
 description: This is a styleguide item.
 category: Buttons => Rounded Buttons
-scripts:
-    - sass/woot/somthing.js
-    - ca/readsf/fasd.js
-
 
 -----------
 
@@ -100,9 +85,6 @@ Woot
 title: Styleguide item 2
 description: This is a styleguide item.
 category: Buttons => Rounded Buttons => 3rd level
-scripts:
-    - sass/woot/somthing.js
-    - ca/readsf/fasd.js
 
 
 -----------

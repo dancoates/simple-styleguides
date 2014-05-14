@@ -1,17 +1,20 @@
 <div class="sg-category">
     {{#each categories}}
         {{setContext ../context @key}}
-        <h2 id="{{getId context}}">{{@key}}</h2>
+        <h2 id="{{getId context}}">{{@key}} <a href="#{{getId context}}" class="anchor-link">#</a></h2>
         {{#if items}}
             {{#each items}}
                 <div class="sg-item">
-                    <h3 id="{{getId ../../context conf.title}}">{{ conf.title}}</h3>
+                    <h3 id="{{getId ../../context info.title}}">{{ info.title}} <a href="#{{getId ../../context info.title}}" class="anchor-link">#</a></h3>
+                    {{#if info.description }} 
+                        {{{ markdown info.description }}}
+                    {{/if}}
                     <div class="sg-item--content">
                         {{{ highlight body }}}
-                        <a href="/{{filePath conf.category conf.title}}" target="_blank" class="sg-example-view">Open in new window</a>
+                        <a href="/{{filePath info.category info.title}}" target="_blank" class="sg-example-view">Open in new window</a>
                         <div class="sg-example">
                             <div class="iframe-container">
-                                <iframe src="/{{filePath conf.category conf.title}}"></iframe>
+                                <iframe src="/{{filePath info.category info.title}}"></iframe>
                             </div>
                             <textarea></textarea>
                         </div>

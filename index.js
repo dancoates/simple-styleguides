@@ -11,7 +11,8 @@ var nsg = function(options) {
     };
     
     var defaults = {
-        template : __dirname + "/template/default/",
+        indexTemplateFolder : __dirname + "/template/default/index/",
+        itemTemplate : __dirname + "/template/default/item/item.html",
         encoding : "UTF8"
     };
 
@@ -68,7 +69,7 @@ Nsg.prototype.parseFileData = function(data, callback) {
         var subBlocks = block.split(/\-{3,}/);
 
         return {
-            conf : _this.util.yaml.parse(subBlocks[0]),
+            info : _this.util.yaml.parse(subBlocks[0]),
             body : _this.util.md(subBlocks.slice(1).join('---'))
         };
 
@@ -82,17 +83,17 @@ Nsg.prototype.generateFiles = function(blocks) {
     var _this = this;
     var fs = _this.util.fs;
     var organizedBlocks = blocks.reduce(function(obj, block) {
-        var cat = block.conf.category;
+        var cat = block.info.category;
         var parent = _this.helpers.traverseObj(obj, cat);
         parent.items.push(block);
         return obj;
     }, {});
 
 
-    var singleTemplatePath = _this.settings.template + "single/single.html";
-    var indexTemplatePathMain = _this.settings.template + "index/main.html";
-    var indexTemplatePathItem = _this.settings.template + "index/item.html";
-    var indexTemplatePathNav = _this.settings.template + "index/nav.html";
+    var singleTemplatePath = _this.settings.itemTemplate;
+    var indexTemplatePathMain = _this.settings.indexTemplateFolder + "main.html";
+    var indexTemplatePathItem = _this.settings.indexTemplateFolder + "item.html";
+    var indexTemplatePathNav = _this.settings.indexTemplateFolder + "nav.html";
 
     // Create single templates
     var opts = {encoding: "UTF8"};
@@ -102,37 +103,14 @@ Nsg.prototype.generateFiles = function(blocks) {
 
     });
 
+    // Register handlebars helpers
+    _this.registerHBHelpers();
+
     // Scope mainTemplate
     var mainTemplate;
     // Callback to generate index once templates are read
     var callback = _this.util._.after(3, function() {
         _this.generateIndex(organizedBlocks, mainTemplate);
-    });
-
-    // Register helpers
-    _this.util.hb.registerHelper('filePath', function(cat, title){
-        return _this.settings.webDir + (cat.split('=>').map(function(part){
-            return _this.helpers.getSlug(part.trim());
-        }).join('/')) + "/" +  _this.helpers.getSlug(title) + ".html";
-    });
-
-    _this.util.hb.registerHelper('highlight', function(html){
-        var highlighted = _this.util.hljs.highlight('html', html);
-        return "<pre class='sg-highlighted'><code>" + highlighted.value + "</code></pre>";
-    });
-
-    _this.util.hb.registerHelper('getId', function(cat, title){
-        var catSlug = _this.helpers.getSlug(cat);
-        var titleSlug = _this.util._.isString(title) ? "-" + _this.helpers.getSlug(title) : "";
-        return catSlug + titleSlug;
-    });
-
-    _this.util.hb.registerHelper('setContext', function(context, key){
-        this.context = _this.helpers.getSlug(context + "-" + key);
-    });
-
-    _this.util.hb.registerHelper('sgLog', function(log){
-        console.log("handlebars log: " + log);
     });
 
     // Read Main Template
@@ -158,9 +136,39 @@ Nsg.prototype.generateFiles = function(blocks) {
         });
         callback();
     });
+};
 
-    
+Nsg.prototype.registerHBHelpers = function() {
+    var _this = this;
+    // Register helpers
+    _this.util.hb.registerHelper('filePath', function(cat, title){
+        return _this.settings.webDir + (cat.split('=>').map(function(part){
+            return _this.helpers.getSlug(part.trim());
+        }).join('/')) + "/" +  _this.helpers.getSlug(title) + ".html";
+    });
 
+    _this.util.hb.registerHelper('highlight', function(html){
+        var highlighted = _this.util.hljs.highlight('html', html);
+        return "<pre class='sg-highlighted hljs'><code>" + highlighted.value + "</code></pre>";
+    });
+
+    _this.util.hb.registerHelper('getId', function(cat, title){
+        var catSlug = _this.helpers.getSlug(cat);
+        var titleSlug = _this.util._.isString(title) ? "-" + _this.helpers.getSlug(title) : "";
+        return catSlug + titleSlug;
+    });
+
+    _this.util.hb.registerHelper('setContext', function(context, key){
+        this.context = _this.helpers.getSlug(context + "-" + key);
+    });
+
+    _this.util.hb.registerHelper('markdown', function(string){
+        return _this.util.md(string);
+    });
+
+    _this.util.hb.registerHelper('sgLog', function(log){
+        console.log("handlebars log: " + log);
+    });
 };
 
 Nsg.prototype.generateIndex = function(blocks, template) {
@@ -188,7 +196,7 @@ Nsg.prototype.generatePartials = function(blocks, template, currentPath) {
             if(obj.items) {
                 obj.items.forEach(function(item){
                     var data = template(item);
-                    var title = item.conf.title;
+                    var title = item.info.title;
                     var fileName = folderPath + '/' +  _this.helpers.getSlug(title) + ".html";
                     fs.writeFile(fileName, data, function(err){
                         console.log(fileName + ' Created');

@@ -1,14 +1,11 @@
 {
-  "name": "node-styleguides",
-  "version": "0.0.0",
+  "name": "simple-styleguides",
+  "version": "0.0.1",
   "description": "A generator to create styleguides from any file types",
   "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:dancoates/styleguide-generator.git"
+    "url": "https://github.com/dancoates/simple-styleguides.git"
   },
   "keywords": [
     "styleguide",
