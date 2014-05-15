@@ -102,6 +102,15 @@ html {
     position: relative;
 }
 
+.sg-heading {
+    margin-left: -10px;
+    padding: 5px 0 8px 10px;
+}
+
+.sg-heading:target {
+    background: #CBE3BD;
+}
+
 .anchor-link {
     text-decoration: none;
     color: #dedede;
@@ -180,6 +189,6 @@ html {
 }
 
 .sg-category .sg-category {
-    padding-left: 1em;
+    padding-left: 10px;
     border-left: 3px solid #CBE3BD;
 }

@@ -1,11 +1,11 @@
 <div class="sg-category">
     {{#each content.categories}}
-        {{setContext ../context @key}}
-        <h2 id="{{getId context}}">{{@key}} <a href="#{{getId context}}" class="anchor-link">#</a></h2>
+        {{setContext ../content.context @key}}
+        <h2 class="sg-heading" id="{{getId context}}">{{@key}} <a href="#{{getId context}}" class="anchor-link">#</a></h2>
         {{#if items}}
             {{#each items}}
                 <div class="sg-item">
-                    <h3 id="{{getId ../../context info.title}}">{{ info.title}} <a href="#{{getId ../../context info.title}}" class="anchor-link">#</a></h3>
+                    <h3 class="sg-heading" id="{{getId ../../context info.title}}">{{ info.title}} <a href="#{{getId ../../context info.title}}" class="anchor-link">#</a></h3>
                     {{#if info.description }} 
                         {{{ markdown info.description }}}
                     {{/if}}

@@ -1,6 +1,6 @@
 <ul class="sg-index--catlist">
     {{#each content.categories}}
-        {{setContext ../context @key}}
+        {{setContext ../content.context @key}}
         <a href="#{{getId context}}" class="sg-index--cat">{{@key}}</a>
         {{#if items}}
             <ul>
