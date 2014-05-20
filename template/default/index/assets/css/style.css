@@ -64,13 +64,14 @@ html {
         list-style-type: none;
     }
 
-        .sg-index li:before {
-            content: "- ";
-        }
 
     .sg-index a {
         text-decoration: none;
         color: #ccc;
+    }
+
+    .sg-index--item:before {
+        content: "- ";
     }
 
     .sg-index a:hover{
@@ -186,9 +187,7 @@ html {
 
 .sg-category {
     margin: 0 0 4em 0;
-}
-
-.sg-category .sg-category {
     padding-left: 10px;
     border-left: 3px solid #CBE3BD;
 }
+
