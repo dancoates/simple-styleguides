@@ -1,6 +1,6 @@
 {
   "name": "simple-styleguides",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A generator to create styleguides from any file types",
   "main": "index.js",
   "repository": {

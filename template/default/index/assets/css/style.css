@@ -88,11 +88,10 @@ html {
 
 .sg-highlighted {
     font-size: 0.875em;
-    max-height: 300px;
+    max-height: 450px;
     overflow: auto;
-    border: 3px solid #eee;
-    background: #f8f8f8;
-    margin-bottom: 0;
+    margin: 0;
+    vertical-align: top;
 }
 
 .sg-item {
@@ -101,6 +100,10 @@ html {
 
 .sg-item--content {
     position: relative;
+    width: 100%;
+    display: table;
+    border: 3px solid #eee;
+
 }
 
 .sg-heading {
@@ -125,13 +128,24 @@ html {
 
 .sg-example {
     display: block;
-    
-    border: 3px solid #eee;
     border-top: 0;
     margin: 0;
     width: 100%;
-    position :relative;
+    position: relative;
 }
+
+.sg-highlight-container, 
+.sg-example {
+    width: 50%;
+    display: table-cell;
+    vertical-align: top;
+}
+
+.sg-highlight-container {
+    border-left: 3px solid #eee;
+    background: #f8f8f8;
+}
+
 
     .sg-example .iframe-container {
         position: absolute;
@@ -173,7 +187,7 @@ html {
 .sg-example-view {
     position: absolute;
     top: 100%;
-    right: 0;
+    left: -3px;
     background: #eee;
     color: #333;
     font-size: 0.875em;

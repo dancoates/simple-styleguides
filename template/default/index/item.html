@@ -10,14 +10,17 @@
                         {{{ markdown info.description }}}
                     {{/if}}
                     <div class="sg-item--content">
-                        {{{ highlight body }}}
-                        <a href="{{filePath info.category info.title}}" target="_blank" class="sg-example-view">Open in new window</a>
                         <div class="sg-example">
+                            <a href="{{filePath info.category info.title}}" target="_blank" class="sg-example-view">Open in new window</a>
                             <div class="iframe-container">
                                 <iframe src="{{filePath info.category info.title}}"></iframe>
                             </div>
                             <textarea></textarea>
                         </div>
+                        <div class="sg-highlight-container">
+                            {{{ highlight body }}}
+                        </div>
+                        
                     </div>
                 </div>
             {{/each}}
