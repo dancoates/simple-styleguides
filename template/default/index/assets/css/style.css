@@ -146,18 +146,11 @@ html {
     background: #f8f8f8;
 }
 
-
-    .sg-example .iframe-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 20px;
-        right: 0;
-    }
-
     .sg-example iframe {
-        position: absolute;
+        position: relative;
+        min-height: 250px;
         background: white;
+        resize: vertical;
         top: 0;
         left: 0;
         width: 100%;
@@ -167,17 +160,7 @@ html {
         z-index: 1;
     }
 
-    .sg-example textarea {
-        display: block;
-        position: relative;
-        z-index: 0;
-        width: 100%;
-        min-height: 250px;
-        border: none;
-        -webkit-appearance: none;
-        outline: none;
-        resize: vertical;
-    }
+    
 
     .sg-example textarea:focus {
         border: none;
