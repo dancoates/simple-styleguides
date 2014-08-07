@@ -5,6 +5,7 @@ nsg({
         "sass/style.scss"
     ],
     outputDir : "styleguide/",
-    webDir : "/styleguide/"
+    webDir : "/styleguide/",
+    captureCSS : true
 });
 

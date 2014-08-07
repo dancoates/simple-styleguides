@@ -17,7 +17,8 @@ var nsg = function(options, callback) {
         outputDir : "styleguide/",
         webDir : "/",
         assetDir : 'assets/',
-        encoding : "UTF8"
+        encoding : "UTF8",
+        captureCSS : true
     };
 
     var settings = util._.extend(defaults, options);
@@ -61,21 +62,26 @@ Nsg.prototype.readFileData = function() {
 
 Nsg.prototype.parseFileData = function(data, callback) {
     var _this = this;
+    var re = !_this.settings.captureCSS ?
+        new RegExp(/\/\*.*?styleguide[\s\S]*?\*\//g) :
+        new RegExp(/\/\*((?!end)\s)*styleguide[\s\S]*?end\s*?styleguide.*?\*\//g);
 
-    var blocks = data.match(/\/\*.*styleguide[\s\S]*?\*\//g);
-    
+    var blocks = data.match(re);
+
     if(!blocks || blocks.length === 0) {
         callback.call(this, []);
         return;
     }
 
     blocks = blocks.map(function(str){
-        var block = str.replace("/*styleguide", "").replace("*/", "");
+        console.log(str + "DELIMITARRR");
+        var block = str.replace("/*styleguide", "")
+                       .replace(/\*\//g, "");
         var subBlocks = block.split(/\-{3,}/);
 
         return {
             info : _this.util.yaml.parse(subBlocks[0]),
-            body : _this.util.md(subBlocks.slice(1).join('---'))
+            body : subBlocks.slice(1).join('---')
         };
 
     });
