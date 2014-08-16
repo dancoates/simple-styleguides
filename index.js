@@ -73,16 +73,25 @@ Nsg.prototype.parseFileData = function(data, callback) {
         return;
     }
 
-    blocks = blocks.map(function(str){
-        console.log(str + "DELIMITARRR");
-        var block = str.replace("/*styleguide", "")
-                       .replace(/\*\//g, "");
-        var subBlocks = block.split(/\-{3,}/);
+    blocks = blocks.map(function(block) {
+        var cleanblock = block
+            .replace(/\/\*.*?styleguide/, "")
+            .replace(/(\/\*)*?.*?end\s*?styleguide.*?\*\//, "");
 
-        return {
-            info : _this.util.yaml.parse(subBlocks[0]),
-            body : subBlocks.slice(1).join('---')
-        };
+        var splitblock = cleanblock.split(/\*\/|-{3,}/);
+        var result = {};
+
+        result.info = _this.util.yaml.parse(splitblock[0]);
+
+        if(splitblock.length === 3) {
+            result.css = splitblock[2];
+            result.body = splitblock[1];
+            console.log(result.css);
+        } else if(splitblock.length === 2) {
+            result.body = splitblock[1];
+        }
+
+        return result;
 
     });
 
